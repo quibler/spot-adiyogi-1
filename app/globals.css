@@ -6,6 +6,10 @@
   --foreground-rgb: 255, 255, 255;
   --background-start-rgb: 0, 0, 255;
   --background-end-rgb: 128, 0, 128;
+  --radius-sm: 0.5rem;    /* 8px */
+  --radius-md: 0.75rem;   /* 12px */
+  --radius-lg: 1rem;      /* 16px */
+  --radius-xl: 1.5rem;    /* 24px */
 }
 
 body {
