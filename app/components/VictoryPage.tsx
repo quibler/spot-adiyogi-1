@@ -33,7 +33,7 @@ export default function VictoryPage({ score, onRestart }: VictoryPageProps) {
       <h2 className="text-3xl font-bold mb-4">Congratulations!</h2>
       <p className="text-xl mb-4">Your score: {score}</p>
       <div className="bg-yellow-400 text-black p-4 rounded-lg mb-6">
-        <h3 className="text-2xl font-bold mb-2">You've Won!</h3>
+        <h3 className="text-2xl font-bold mb-2">You&apos;ve Won!</h3>
         <p className="mb-2">Exclusive Sadhguru content unlocked!</p>
         <p className="text-sm text-red-600 font-bold">Limited Time Offer - Claim Now!</p>
       </div>

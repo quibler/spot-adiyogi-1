@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { ArrowDown } from "lucide-react";
 
 const TARGET_ICON = "icons/adiyogi-icon.png";
-const TARGET_POINTS = 50; // Points needed to win
 
 interface StartPageProps {
   onStart: () => void;

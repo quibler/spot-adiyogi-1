@@ -74,7 +74,7 @@ export default function EndPage({ score, onRestart }: EndPageProps) {
       <div className="bg-white/10 rounded-lg p-6 mb-8">
         <h3 className="text-lg font-bold mb-2">Bonus Content</h3>
         <p className="mb-4">
-          Watch the Sadhguru Exclusive's Shiva Series FREE on Sadhguru App until
+          Watch the Sadhguru Exclusive&apos;s Shiva Series FREE on Sadhguru App until
           March
         </p>
         <p className="italic mb-4">Shiva—myth, god, or the ultimate reality?</p>

@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Heart, X, ArrowDown } from "lucide-react";
+import { motion } from "framer-motion";
+import { Heart, X } from "lucide-react";
 
 interface GamePageProps {
   onEnd: (score: number) => void;
@@ -26,7 +26,7 @@ export default function GamePage({ onEnd }: GamePageProps) {
   const [shuffleInterval, setShuffleInterval] = useState(
     INITIAL_SHUFFLE_INTERVAL
   );
-  const [canTap, setCanTap] = useState(true);
+  const [canTap] = useState(true);
   const [gridFlash, setGridFlash] = useState<"correct" | "wrong" | null>(null);
   const lastTapTimeRef = useRef(0);
   const shuffleTimeoutRef = useRef<NodeJS.Timeout | null>(null);
