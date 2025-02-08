@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion } from "framer-motion";
 import { Heart, X } from "lucide-react";
+import { useSound } from "@/lib/useSound";
 
 interface GamePageProps {
   onEnd: (score: number) => void;
@@ -28,6 +29,8 @@ export default function GamePage({ onEnd }: GamePageProps) {
   );
   const [canTap] = useState(true);
   const [gridFlash, setGridFlash] = useState<"correct" | "wrong" | null>(null);
+  const [speedFlash, setSpeedFlash] = useState(false);
+  const { playScore, playWrong } = useSound();
   const lastTapTimeRef = useRef(0);
   const shuffleTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -47,6 +50,8 @@ export default function GamePage({ onEnd }: GamePageProps) {
     setShuffleInterval(
       (prevInterval) => prevInterval * (1 - INTERVAL_DECREASE)
     );
+    setSpeedFlash(true);
+    setTimeout(() => setSpeedFlash(false), 500);
   }, []);
 
   useEffect(() => {
@@ -74,22 +79,24 @@ export default function GamePage({ onEnd }: GamePageProps) {
   const handleIconClick = (icon: string) => {
     const currentTime = Date.now();
     if (currentTime - lastTapTimeRef.current < shuffleInterval) {
-      return false; // Return false for invalid taps
+      return false;
     }
     lastTapTimeRef.current = currentTime;
 
     if (icon === TARGET_ICON) {
       setScore((prev) => Math.min(prev + 1, MAX_SCORE));
       setGridFlash("correct");
+      playScore();
     } else {
       setLives((prev) => prev - 1);
       decreaseInterval();
       setGridFlash("wrong");
+      playWrong();
     }
 
     // Reset flash after animation
     setTimeout(() => setGridFlash(null), 200);
-    return true; // Return true for valid taps
+    return true;
   };
 
   return (
@@ -120,7 +127,11 @@ export default function GamePage({ onEnd }: GamePageProps) {
           <div className="text-3xl font-bold mb-1">
             {score}/{TARGET_POINTS}
           </div>
-          <div className="text-sm opacity-75">
+          <div
+            className={`text-sm transition-colors duration-200 ${
+              speedFlash ? "text-red-500 font-bold" : "opacity-75"
+            }`}
+          >
             Speed: {Math.round(shuffleInterval)}ms
           </div>
         </div>
