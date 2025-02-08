@@ -9,8 +9,8 @@ interface GamePageProps {
 }
 
 const GRID_SIZE = 5;
-const INITIAL_SHUFFLE_INTERVAL = 1500; // 1.5 seconds to start (slightly easier)
-const INTERVAL_DECREASE = 0.03; // 3% decrease (more gradual difficulty increase)
+const INITIAL_SHUFFLE_INTERVAL = 1000; // 1 seconds to start
+const INTERVAL_DECREASE = 0.05; // 5% decrease (more gradual difficulty increase)
 const INTERVAL_DECREASE_TIME = 10000; // 10 seconds
 const MAX_LIVES = 5;
 const MAX_SCORE = 108;
@@ -147,7 +147,7 @@ export default function GamePage({ onEnd }: GamePageProps) {
 
       {/* Game Grid */}
       <div
-        className={`grid grid-cols-${GRID_SIZE} gap-2 p-4 rounded-lg transition-colors duration-200 ${
+        className={`grid grid-cols-5 gap-2 p-4 rounded-lg transition-colors duration-200 ${
           gridFlash === "correct"
             ? "bg-green-500/20"
             : gridFlash === "wrong"
