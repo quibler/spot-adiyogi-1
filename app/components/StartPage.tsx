@@ -16,7 +16,7 @@ export default function StartPage({ onStart }: StartPageProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="text-center max-w-md mx-auto"
+      className="text-center max-w-md mx-auto px-2"
     >
       <h1 className="text-4xl font-bold mb-4">Spot Adiyogi</h1>
       <p className="mb-4">
