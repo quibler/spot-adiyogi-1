@@ -159,11 +159,15 @@ export default function GamePage({ onEnd }: GamePageProps) {
           <motion.button
             key={`${icon}-${index}`}
             whileHover={canTap ? { scale: 1.05 } : undefined}
-            whileTap={canTap ? { scale: 0.95 } : undefined}
-            onClick={(e) => {
+            whileTap={
+              canTap && Date.now() - lastTapTimeRef.current >= shuffleInterval
+                ? { scale: 0.95 }
+                : undefined
+            }
+            onClick={() => {
               const isValidTap = handleIconClick(icon);
               if (!isValidTap) {
-                e.preventDefault();
+                return;
               }
             }}
             className="aspect-square bg-white rounded-lg overflow-hidden flex items-center justify-center shadow-lg"
