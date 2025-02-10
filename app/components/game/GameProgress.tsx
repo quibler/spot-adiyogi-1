@@ -6,7 +6,6 @@ interface GameProgressProps {
 }
 
 export function GameProgress({
-  score,
   targetPoints,
   wrongTaps,
   correctTaps,
