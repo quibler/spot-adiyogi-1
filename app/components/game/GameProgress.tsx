@@ -51,7 +51,10 @@ export function GameProgress({
           }
 
           return (
-            <div className="mt-4 mb-6 flex flex-col">
+            <div
+              key={index} // Add key here
+              className="mt-4 mb-6 flex flex-col"
+            >
               <div
                 key={index}
                 className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${dotColor} ${scale}`}

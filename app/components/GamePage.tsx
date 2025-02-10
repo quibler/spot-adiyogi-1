@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useSound } from "@/lib/useSound";
 import type { GamePageProps } from "@/lib/types";
 import { ImagePreloader } from "@/components/ui/imagePreloader";

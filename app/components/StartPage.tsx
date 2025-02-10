@@ -20,7 +20,8 @@ export default function StartPage({ onStart }: StartPageProps) {
     >
       <h1 className="text-4xl font-bold mb-4">Spot Adiyogi</h1>
       <p className="mb-4">
-        Tap the Adiyogi symbol as fast as you can! Be quick, be precise!
+        Tap the Adiyogi symbol as fast as you can!
+        <br /> Be quick and calm to score high!
       </p>
       <div className="grid place-content-center gap-2">
         <ArrowDown className="w-12 h-12 mx-auto text-yellow-400 animate-bounce" />
@@ -30,7 +31,7 @@ export default function StartPage({ onStart }: StartPageProps) {
           className="w-32 h-32 border-2 border-yellow-400 rounded-lg"
         />
       </div>
-      <p className="my-4">Reach 50 points to win exclusive Sadhguru content!</p>
+      <p className="my-4">Beat the highcore of 50!</p>
       <Button
         onClick={onStart}
         className="bg-yellow-400 text-black hover:bg-yellow-500"
