@@ -10,7 +10,6 @@ export function GameGrid({
   gridFlash: "correct" | "wrong" | null; // Update this type
   onIconClick: (icon: string) => void;
   canTap: boolean;
-  shuffleInterval: number;
 }) {
   const handleTouchStart = (e: React.TouchEvent, icon: string) => {
     e.preventDefault();

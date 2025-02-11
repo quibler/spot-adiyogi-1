@@ -1,16 +1,17 @@
 "use client";
 
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useSound } from "@/lib/useSound";
 import type { GamePageProps } from "@/lib/types";
 import { ImagePreloader } from "@/components/ui/imagePreloader";
 import { GAME_CONFIG, ASSETS } from "@/lib/constants";
 import { useGameState } from "@/lib/useGameState";
 import { useIconShuffle } from "@/lib/useIconShuffle";
+import { useInactivityTimer } from "@/lib/useInactivityTimer";
 import { GameGrid } from "./game/GameGrid";
 import { GameInstructions } from "./game/GameInstructions";
-import { GameProgress } from "./game/GameProgress";
 import { GameStats } from "./game/GameStats";
+import { InactivityWarning } from "./game/InactivityWarning";
 
 export default function GamePage({ onEnd }: GamePageProps) {
   const {
@@ -19,16 +20,16 @@ export default function GamePage({ onEnd }: GamePageProps) {
     shuffleInterval,
     gridFlash,
     speedFlash,
-    wrongTaps,
-    correctTaps,
     updateScore,
     decreaseLives,
     decreaseInterval,
   } = useGameState();
 
-  const { icons, shuffleIcons, cleanup, canTap } =
-    useIconShuffle(shuffleInterval);
+  const { icons, shuffleIcons, cleanup, canTap } = useIconShuffle(shuffleInterval);
   const { playScore, playWrong } = useSound();
+  
+  const handleTimeout = useCallback(() => onEnd(score), [onEnd, score]);
+  const { showWarning, resetTimer } = useInactivityTimer(handleTimeout);
 
   useEffect(() => {
     shuffleIcons(); // Initial shuffle
@@ -51,8 +52,12 @@ export default function GamePage({ onEnd }: GamePageProps) {
 
   const handleIconClick = (icon: string) => {
     if (!canTap()) {
+      console.log("[Game] Icon click ignored - cannot tap now");
       return false;
     }
+
+    console.log("[Game] Valid tap detected - resetting inactivity timer");
+    resetTimer();
 
     if (icon === ASSETS.TARGET_ICON) {
       updateScore();
@@ -67,6 +72,7 @@ export default function GamePage({ onEnd }: GamePageProps) {
   return (
     <div className="text-center max-w-2xl mx-auto px-4">
       <ImagePreloader />
+      {showWarning && <InactivityWarning onContinue={resetTimer} />}
       <GameInstructions onQuit={() => onEnd(score)} />
       <GameStats
         score={score}
@@ -79,7 +85,6 @@ export default function GamePage({ onEnd }: GamePageProps) {
         gridFlash={gridFlash}
         onIconClick={handleIconClick}
         canTap={canTap()}
-        shuffleInterval={shuffleInterval}
       />
     </div>
   );
