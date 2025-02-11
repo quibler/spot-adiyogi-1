@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Instagram, Share2 } from "lucide-react";
+import { Share2 } from "lucide-react";
 
 interface EndPageProps {
   score: number;
@@ -18,11 +18,6 @@ export default function EndPage({ score, onRestart }: EndPageProps) {
     } catch (error) {
       console.log('Error sharing:', error);
     }
-  };
-
-  const shareOnInstagram = () => {
-    const message = "Screenshot your result and share on Instagram with #MyAdiyogiGameScore";
-    alert(message);
   };
 
   return (
