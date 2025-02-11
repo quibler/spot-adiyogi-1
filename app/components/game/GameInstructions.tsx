@@ -1,4 +1,4 @@
-import { ASSETS, GAME_CONFIG } from "@/lib/constants";
+import { ASSETS } from "@/lib/constants";
 import { X } from "lucide-react";
 interface GameInstructionsProps {
   onQuit: () => void;
