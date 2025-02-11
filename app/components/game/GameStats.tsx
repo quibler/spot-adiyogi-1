@@ -1,4 +1,3 @@
-import { Heart, X } from "lucide-react";
 import { GAME_CONFIG } from "@/lib/constants";
 
 interface GameStatsProps {
@@ -6,7 +5,6 @@ interface GameStatsProps {
   lives: number;
   shuffleInterval: number;
   speedFlash: boolean;
-  onQuit: () => void;
 }
 
 export function GameStats({
@@ -14,17 +12,16 @@ export function GameStats({
   lives,
   shuffleInterval,
   speedFlash,
-  onQuit,
 }: GameStatsProps) {
   // Calculate speed multiplier and number of bars to show
   const getSpeedInfo = () => {
     const speedMultiplier =
       GAME_CONFIG.INITIAL_SHUFFLE_INTERVAL / shuffleInterval;
-    // Start at 1 bar, add a bar every 0.2x increase in speed
+    // Calculate filled bars based on speed from 1x to 3x across 10 bars
     // e.g., 1x = 1 bar, 1.2x = 2 bars, 1.4x = 3 bars, etc.
     const filledBars = Math.min(
-      Math.max(Math.floor((speedMultiplier - 0.9) / 0.2) + 1, 1),
-      5
+      Math.max(Math.floor(((speedMultiplier - 1) / 2) * 10) + 1, 1),
+      10
     );
     return { speedMultiplier, filledBars };
   };
@@ -34,66 +31,53 @@ export function GameStats({
     const { filledBars } = getSpeedInfo();
     if (barIndex >= filledBars) return "bg-white/10"; // Empty bar
 
-    // Colors from easiest to hardest
+    // Colors from easiest to hardest (10 levels)
     const colors = [
-      "bg-green-500", // 1x speed (default)
-      "bg-yellow-500", // 1.2x speed
-      "bg-orange-500", // 1.4x speed
-      "bg-red-500", // 1.6x speed
-      "bg-purple-500", // 1.8x+ speed
+      "bg-green-600", // 1.0x speed
+      "bg-green-500", // 1.2x speed
+      "bg-green-400", // 1.4x speed
+      "bg-yellow-400", // 1.6x speed
+      "bg-yellow-500", // 1.8x speed
+      "bg-orange-400", // 2.0x speed
+      "bg-orange-500", // 2.2x speed
+      "bg-red-400", // 2.4x speed
+      "bg-red-500", // 2.6x speed
+      "bg-red-600", // 2.8x-3.0x speed
     ];
     return colors[barIndex];
   };
 
+  const { speedMultiplier } = getSpeedInfo();
+
   return (
-    <div className="flex justify-between items-start p-4">
-      {/* Left side stats */}
-      <div className="flex flex-col gap-6">
-        {/* Score */}
-        <div className="flex flex-col gap-2">
-          <div className="text-sm text-white/60">Score</div>
-          <div className="text-4xl font-bold">{score}</div>
+    <div className="flex justify-between items-center bg-white/10 rounded-lg mb-4 p-4">
+      {/* Score */}
+      <div className="text-center">
+        <div className="text-sm opacity-75">Score</div>
+        <div className="text-2xl font-bold">{score}</div>
+      </div>
+
+      {/* Speed */}
+      <div className="flex-1 mx-8">
+        <div className="text-sm opacity-75 mb-1">
+          Speed: {speedMultiplier.toFixed(1)}x
         </div>
-        {/* Difficulty */}
-        <div className="flex flex-col gap-2">
-          <div className="text-sm text-white/60">Difficulty</div>
-          <div className="flex gap-1">
-            {Array.from({ length: 5 }).map((_, index) => (
-              <div
-                key={index}
-                className={`h-5 w-2.5 rounded-sm transition-all duration-300 ${getBarColor(
-                  index
-                )} ${speedFlash ? "scale-110" : ""}`}
-              />
-            ))}
-          </div>
+        <div className="flex gap-1 justify-center">
+          {Array.from({ length: 10 }).map((_, index) => (
+            <div
+              key={index}
+              className={`h-5 w-1.5 rounded-sm transition-all duration-300 ${getBarColor(
+                index
+              )} ${speedFlash ? "scale-110" : ""}`}
+            />
+          ))}
         </div>
       </div>
 
-      {/* Right side stats */}
-      <div className="flex flex-col gap-6 items-end">
-        {/* Lives */}
-        <div className="flex flex-col gap-2 items-end">
-          <div className="text-sm text-white/60">Lives</div>
-          <div className="flex gap-1">
-            {Array.from({ length: GAME_CONFIG.MAX_LIVES }).map((_, index) => (
-              <Heart
-                key={index}
-                className={`w-7 h-7 ${
-                  index < lives ? "text-red-500 fill-red-500" : "text-white/20"
-                }`}
-              />
-            ))}
-          </div>
-        </div>
-        {/* Quit button */}
-        <button
-          onClick={onQuit}
-          className="p-2 hover:bg-white/10 rounded-full transition-colors"
-          title="Quit Game"
-        >
-          <X className="w-7 h-7" />
-        </button>
+      {/* Lives */}
+      <div className="text-center">
+        <div className="text-sm opacity-75">Lives</div>
+        <div className="text-2xl font-bold">{lives}</div>
       </div>
     </div>
   );

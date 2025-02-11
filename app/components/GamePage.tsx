@@ -67,19 +67,12 @@ export default function GamePage({ onEnd }: GamePageProps) {
   return (
     <div className="text-center max-w-2xl mx-auto px-4">
       <ImagePreloader />
-      <GameInstructions />
+      <GameInstructions onQuit={() => onEnd(score)} />
       <GameStats
         score={score}
         lives={lives}
         shuffleInterval={shuffleInterval}
         speedFlash={speedFlash}
-        onQuit={() => onEnd(score)}
-      />
-      <GameProgress
-        score={score}
-        targetPoints={GAME_CONFIG.TARGET_POINTS}
-        wrongTaps={wrongTaps}
-        correctTaps={correctTaps}
       />
       <GameGrid
         icons={icons}
