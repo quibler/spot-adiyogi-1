@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useRef } from "react";
 
 export function GameGrid({
   icons,
@@ -7,13 +8,26 @@ export function GameGrid({
   canTap,
 }: {
   icons: string[];
-  gridFlash: "correct" | "wrong" | null; // Update this type
+  gridFlash: "correct" | "wrong" | null;
   onIconClick: (icon: string) => void;
   canTap: boolean;
 }) {
+  const lastTapTimeRef = useRef<number>(0);
+  const TAP_THRESHOLD = 300; // Minimum time (ms) between taps
+
+  const handleTap = (icon: string) => {
+    const now = Date.now();
+    if (now - lastTapTimeRef.current < TAP_THRESHOLD) {
+      // Ignore taps that are too close together
+      return;
+    }
+    lastTapTimeRef.current = now;
+    onIconClick(icon);
+  };
+
   const handleTouchStart = (e: React.TouchEvent, icon: string) => {
     e.preventDefault();
-    onIconClick(icon);
+    handleTap(icon);
   };
 
   return (
@@ -31,7 +45,7 @@ export function GameGrid({
           key={`${icon}-${index}`}
           whileHover={canTap ? { scale: 1.05 } : undefined}
           whileTap={canTap ? { scale: 0.95 } : undefined}
-          onClick={() => onIconClick(icon)}
+          onClick={() => handleTap(icon)}
           onTouchStart={(e) => handleTouchStart(e, icon)}
           className="aspect-square bg-white rounded-lg overflow-hidden flex items-center justify-center shadow-lg relative game-grid-item touch-manipulation"
         >
