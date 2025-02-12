@@ -16,10 +16,10 @@ export default function StartPage({ onStart }: StartPageProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="text-center max-w-md mx-auto px-2"
+      className="grid text-center max-w-md mx-auto px-2 gap-6"
     >
-      <h1 className="text-4xl font-bold mb-4">Spot Adiyogi</h1>
-      <p className="mb-4">
+      <h1 className="text-4xl font-bold">Spot Adiyogi</h1>
+      <p className="">
         Tap the Adiyogi symbol as fast as you can!
         <br /> Be quick and calm to score high!
       </p>
@@ -31,7 +31,6 @@ export default function StartPage({ onStart }: StartPageProps) {
           className="w-32 h-32 border-2 border-yellow-400 rounded-lg"
         />
       </div>
-      <p className="my-4">Beat the highcore of 50!</p>
       <Button
         onClick={onStart}
         className="bg-yellow-400 text-black hover:bg-yellow-500"
