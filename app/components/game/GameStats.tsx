@@ -50,23 +50,23 @@ export function GameStats({
   const { speedMultiplier } = getSpeedInfo();
 
   return (
-    <div className="flex justify-between items-center bg-white/10 rounded-lg mb-4 p-4">
+    <div className="grid grid-cols-3 gap-4 bg-gradient-to-r from-white/5 to-white/10 rounded-xl p-6">
       {/* Score */}
-      <div className="text-center">
-        <div className="text-sm opacity-75">Score</div>
-        <div className="text-2xl font-bold">{score}</div>
+      <div className="text-center p-2 bg-white/5 rounded-lg">
+        <div className="text-sm opacity-75 mb-1">Score</div>
+        <div className="text-3xl font-bold">{score}</div>
       </div>
 
       {/* Speed */}
-      <div className="flex-1 mx-8">
-        <div className="text-sm opacity-75 mb-1">
+      <div className="flex flex-col justify-center">
+        <div className="text-sm opacity-75 mb-2 text-center">
           Speed: {speedMultiplier.toFixed(1)}x
         </div>
         <div className="flex gap-1 justify-center">
           {Array.from({ length: 10 }).map((_, index) => (
             <div
               key={index}
-              className={`h-5 w-1.5 rounded-sm transition-all duration-300 ${getBarColor(
+              className={`h-6 w-1.5 rounded-full transition-all duration-300 ${getBarColor(
                 index
               )} ${speedFlash ? "scale-110" : ""}`}
             />
@@ -75,9 +75,9 @@ export function GameStats({
       </div>
 
       {/* Lives */}
-      <div className="text-center">
-        <div className="text-sm opacity-75">Lives</div>
-        <div className="text-2xl font-bold">{lives}</div>
+      <div className="text-center p-2 bg-white/5 rounded-lg">
+        <div className="text-sm opacity-75 mb-1">Lives</div>
+        <div className="text-3xl font-bold">{lives}</div>
       </div>
     </div>
   );

@@ -25,14 +25,15 @@ export default function GamePage({ onEnd }: GamePageProps) {
     decreaseInterval,
   } = useGameState();
 
-  const { icons, shuffleIcons, cleanup, canTap } = useIconShuffle(shuffleInterval);
+  const { icons, shuffleIcons, cleanup, canTap } =
+    useIconShuffle(shuffleInterval);
   const { playScore, playWrong } = useSound();
-  
+
   const handleTimeout = useCallback(() => onEnd(score), [onEnd, score]);
   const { showWarning, resetTimer } = useInactivityTimer(handleTimeout);
 
   useEffect(() => {
-    shuffleIcons(); // Initial shuffle
+    shuffleIcons();
     const intervalDecreaseTimer = setInterval(
       () => decreaseInterval(),
       GAME_CONFIG.INTERVAL_DECREASE_TIME
@@ -70,22 +71,26 @@ export default function GamePage({ onEnd }: GamePageProps) {
   };
 
   return (
-    <div className="text-center max-w-2xl mx-auto px-4">
+    <div className="grid max-w-md p-6 landscape:flex landscape:max-w-full landscape:max-h-dvh landscape:justify-around gap-4">
       <ImagePreloader />
       {showWarning && <InactivityWarning onContinue={resetTimer} />}
-      <GameInstructions onQuit={() => onEnd(score)} />
-      <GameStats
-        score={score}
-        lives={lives}
-        shuffleInterval={shuffleInterval}
-        speedFlash={speedFlash}
-      />
-      <GameGrid
-        icons={icons}
-        gridFlash={gridFlash}
-        onIconClick={handleIconClick}
-        canTap={canTap()}
-      />
-    </div>
+      {/* Controls Section */}
+      <div className="landscape:my-auto">
+        <GameInstructions onQuit={() => onEnd(score)} />
+        <GameStats
+          score={score}
+          lives={lives}
+          shuffleInterval={shuffleInterval}
+          speedFlash={speedFlash}
+        />
+      </div>
+      {/* Game Grid Section */}
+        <GameGrid
+          icons={icons}
+          gridFlash={gridFlash}
+          onIconClick={handleIconClick}
+          canTap={canTap()}
+        />
+      </div>
   );
 }

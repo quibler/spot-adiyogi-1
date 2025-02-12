@@ -57,6 +57,9 @@ const config: Config = {
         lg: "var(--radius-lg)",
         xl: "var(--radius-xl)",
       },
+      screens: {
+        tall: { raw: "(max-aspect-ratio: 1/1)" },
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],

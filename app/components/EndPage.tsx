@@ -151,7 +151,7 @@ export default function EndPage({ score, onRestart }: EndPageProps) {
           <ul className="space-y-3 mb-6 text-white/80">
             <li className="flex items-start">
               <span className="mr-2">🎥</span>
-              <span>Watch Sadhguru Exclusive's Shiva Series</span>
+              <span>Watch Sadhguru Exclusive&apos;s Shiva Series</span>
             </li>
             <li className="flex items-start">
               <span className="mr-2">⏰</span>
