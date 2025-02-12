@@ -53,11 +53,9 @@ export default function GamePage({ onEnd }: GamePageProps) {
 
   const handleIconClick = (icon: string) => {
     if (!canTap()) {
-      console.log("[Game] Icon click ignored - cannot tap now");
       return false;
     }
 
-    console.log("[Game] Valid tap detected - resetting inactivity timer");
     resetTimer();
 
     if (icon === ASSETS.TARGET_ICON) {
@@ -71,9 +69,8 @@ export default function GamePage({ onEnd }: GamePageProps) {
   };
 
   return (
-    <div className="grid max-w-md p-6 landscape:flex landscape:max-w-full landscape:max-h-dvh landscape:justify-around gap-4">
+    <div className="grid place-content-center w-auto p-6 portrait:max-w-[25rem] portrait:h-dvh landscape:flex landscape:max-w-full landscape:justify-around gap-4 overflow-hidden">
       <ImagePreloader />
-      {showWarning && <InactivityWarning onContinue={resetTimer} />}
       {/* Controls Section */}
       <div className="landscape:my-auto">
         <GameInstructions onQuit={() => onEnd(score)} />
@@ -85,12 +82,16 @@ export default function GamePage({ onEnd }: GamePageProps) {
         />
       </div>
       {/* Game Grid Section */}
-        <GameGrid
-          icons={icons}
-          gridFlash={gridFlash}
-          onIconClick={handleIconClick}
-          canTap={canTap()}
-        />
+      <div className="h-full flex items-center">
+        <div className="w-full h-auto max-h-full aspect-square">
+          <GameGrid
+            icons={icons}
+            gridFlash={gridFlash}
+            onIconClick={handleIconClick}
+            canTap={canTap()}
+          />
+        </div>
       </div>
+    </div>
   );
 }

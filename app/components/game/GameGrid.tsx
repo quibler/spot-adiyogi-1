@@ -32,13 +32,17 @@ export function GameGrid({
 
   return (
     <div
-      className={`grid grid-cols-5 gap-2 p-4 rounded-lg transition-colors duration-200 landscape:max-h-[40rem] aspect-square my-auto ${
-        gridFlash === "correct"
-          ? "bg-green-500/80"
-          : gridFlash === "wrong"
-          ? "bg-red-500/80"
-          : "bg-white/10"
-      }`}
+      className={`grid grid-cols-5 gap-2 p-4 rounded-lg transition-colors duration-200 
+        w-full aspect-square
+        max-h-[85vh] 
+        landscape:max-h-[85vh]
+        ${
+          gridFlash === "correct"
+            ? "bg-green-500/80"
+            : gridFlash === "wrong"
+            ? "bg-red-500/80"
+            : "bg-white/10"
+        }`}
     >
       {icons.map((icon, index) => (
         <motion.button

@@ -9,11 +9,9 @@ export function useInactivityTimer(onTimeout: () => void) {
 
   const resetTimer = useCallback(() => {
     if (!isActiveRef.current) return;
-    console.log("[Timer] Resetting timer - new interaction detected");
     lastInteractionRef.current = Date.now();
 
     if (finalTimeoutRef.current) {
-      console.log("[Timer] Clearing final timeout");
       clearTimeout(finalTimeoutRef.current);
       finalTimeoutRef.current = null;
     }
@@ -21,35 +19,26 @@ export function useInactivityTimer(onTimeout: () => void) {
   }, []);
 
   useEffect(() => {
-    console.log("[Timer] Setting up inactivity check interval");
     isActiveRef.current = true;
 
     checkIntervalRef.current = setInterval(() => {
       if (!isActiveRef.current) return;
       const timeSinceLastInteraction = Date.now() - lastInteractionRef.current;
-      console.log(
-        `[Timer] Time since last interaction: ${Math.floor(
-          timeSinceLastInteraction / 1000
-        )}s`
-      );
 
       if (timeSinceLastInteraction >= 5000 && !showWarning) {
-        console.log("[Timer] Showing inactivity warning");
         setShowWarning(true);
 
         if (!finalTimeoutRef.current) {
           finalTimeoutRef.current = setTimeout(() => {
             if (isActiveRef.current) {
-              console.log("[Timer] Final timeout reached - ending game");
               onTimeout();
             }
-          }, 10000);
+          }, 1000000);
         }
       }
     }, 1000);
 
     return () => {
-      console.log("[Timer] Cleaning up timer");
       isActiveRef.current = false;
       if (checkIntervalRef.current) {
         clearInterval(checkIntervalRef.current);

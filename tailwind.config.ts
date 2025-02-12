@@ -59,6 +59,30 @@ const config: Config = {
       },
       screens: {
         tall: { raw: "(max-aspect-ratio: 1/1)" },
+        // Small phones in landscape (iPhone SE etc)
+        "landscape-sm": {
+          raw: "(max-height: 375px) and (orientation: landscape)",
+        },
+
+        // Regular phones in landscape
+        "landscape-md": {
+          raw: "(min-height: 376px) and (max-height: 428px) and (orientation: landscape)",
+        },
+
+        // Large phones/Small tablets in landscape
+        "landscape-lg": {
+          raw: "(min-height: 429px) and (max-height: 712px) and (orientation: landscape)",
+        },
+
+        // Regular tablets in landscape
+        "landscape-xl": {
+          raw: "(min-height: 713px) and (max-height: 834px) and (orientation: landscape)",
+        },
+
+        // Large tablets in landscape
+        "landscape-2xl": {
+          raw: "(min-height: 835px) and (orientation: landscape)",
+        },
       },
     },
   },
