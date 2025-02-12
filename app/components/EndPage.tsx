@@ -37,7 +37,7 @@ const MEDALS = [
     message: "Great job! Keep pushing higher!",
   },
   {
-    threshold: 0,
+    threshold: 20,
     name: "Bronze",
     emoji: "🥉",
     color: "text-yellow-700",
