@@ -33,7 +33,7 @@ export function useInactivityTimer(onTimeout: () => void) {
             if (isActiveRef.current) {
               onTimeout();
             }
-          }, 1000000);
+          }, 10000);
         }
       }
     }, 1000);

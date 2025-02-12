@@ -71,6 +71,7 @@ export default function GamePage({ onEnd }: GamePageProps) {
   return (
     <div className="grid place-content-center w-auto p-6 portrait:max-w-[25rem] portrait:h-dvh landscape:flex landscape:max-w-full landscape:justify-around gap-4 overflow-hidden">
       <ImagePreloader />
+      {showWarning && <InactivityWarning onContinue={resetTimer} />}
       {/* Controls Section */}
       <div className="landscape:my-auto">
         <GameInstructions onQuit={() => onEnd(score)} />
