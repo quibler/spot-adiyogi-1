@@ -1,6 +1,10 @@
+// EndPage.tsx
+"use client";
+
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Share2, Sparkles, RotateCcw } from "lucide-react";
+import { useTracking } from "@/lib/mixpanel";
 
 interface EndPageProps {
   score: number;
@@ -50,7 +54,11 @@ function getMedal(score: number) {
 }
 
 export default function EndPage({ score, onRestart }: EndPageProps) {
+  const tracking = useTracking();
+  const medal = getMedal(score);
+
   const shareWithFriends = () => {
+    tracking.trackShareOnInsta(score);
     if (navigator.share) {
       navigator.share({
         title: "Adiyogi Game",
@@ -62,7 +70,15 @@ export default function EndPage({ score, onRestart }: EndPageProps) {
     }
   };
 
-  const medal = getMedal(score);
+  const handlePlayAgain = () => {
+    tracking.trackPlayAgain(score);
+    onRestart();
+  };
+
+  const handleWatchNow = () => {
+    tracking.trackWatchNow();
+    window.open("YOUR_WATCH_NOW_LINK", "_blank");
+  };
 
   return (
     <div className="min-h-screen overflow-y-auto scrollbar-hide py-8">
@@ -96,7 +112,7 @@ export default function EndPage({ score, onRestart }: EndPageProps) {
 
           <div className="space-y-4">
             <Button
-              onClick={onRestart}
+              onClick={handlePlayAgain}
               className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-base sm:text-lg py-4 sm:py-6"
             >
               <RotateCcw className="w-5 h-5 sm:w-6 sm:h-6 mr-2 animate-pulse" />
@@ -146,7 +162,7 @@ export default function EndPage({ score, onRestart }: EndPageProps) {
         >
           <h3 className="text-xl font-bold mb-4 flex items-center">
             <Sparkles className="w-6 h-6 mr-2 text-yellow-400" />
-            Exclusive Free Access
+            Bonus Content
           </h3>
           <ul className="space-y-3 mb-6 text-white/80">
             <li className="flex items-start">
@@ -155,7 +171,7 @@ export default function EndPage({ score, onRestart }: EndPageProps) {
             </li>
             <li className="flex items-start">
               <span className="mr-2">⏰</span>
-              <span>Free until February 28th</span>
+              <span>Free until &apos;28 February&apos;</span>
             </li>
             <li className="flex items-start">
               <span className="mr-2">📱</span>
@@ -164,7 +180,7 @@ export default function EndPage({ score, onRestart }: EndPageProps) {
           </ul>
           <Button
             className="w-full bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-base sm:text-lg py-4 sm:py-6"
-            onClick={() => window.open("YOUR_WATCH_NOW_LINK", "_blank")}
+            onClick={handleWatchNow}
           >
             Watch Now
           </Button>

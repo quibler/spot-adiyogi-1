@@ -12,11 +12,6 @@
   --radius-xl: 1.5rem;    /* 24px */
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(to bottom, transparent, rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
-}
-
 .game-grid-item {
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;

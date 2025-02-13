@@ -1,6 +1,7 @@
+// GamePage.tsx
 "use client";
 
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useSound } from "@/lib/useSound";
 import type { GamePageProps } from "@/lib/types";
 import { ImagePreloader } from "@/components/ui/imagePreloader";
@@ -12,6 +13,7 @@ import { GameGrid } from "./game/GameGrid";
 import { GameInstructions } from "./game/GameInstructions";
 import { GameStats } from "./game/GameStats";
 import { InactivityWarning } from "./game/InactivityWarning";
+import { useTracking } from "@/lib/mixpanel";
 
 export default function GamePage({ onEnd }: GamePageProps) {
   const {
@@ -25,11 +27,19 @@ export default function GamePage({ onEnd }: GamePageProps) {
     decreaseInterval,
   } = useGameState();
 
+  const startTime = useRef(Date.now());
+  const tracking = useTracking();
+
   const { icons, shuffleIcons, cleanup, canTap } =
     useIconShuffle(shuffleInterval);
   const { playScore, playWrong } = useSound();
 
-  const handleTimeout = useCallback(() => onEnd(score), [onEnd, score]);
+  const handleTimeout = useCallback(() => {
+    const duration = Math.floor((Date.now() - startTime.current) / 1000);
+    tracking.trackGameCompleted({ score, duration });
+    onEnd(score);
+  }, [onEnd, score, tracking]);
+
   const { showWarning, resetTimer } = useInactivityTimer(handleTimeout);
 
   useEffect(() => {
@@ -47,9 +57,11 @@ export default function GamePage({ onEnd }: GamePageProps) {
 
   useEffect(() => {
     if (score >= GAME_CONFIG.MAX_SCORE || lives <= 0) {
+      const duration = Math.floor((Date.now() - startTime.current) / 1000);
+      tracking.trackGameCompleted({ score, duration });
       onEnd(score);
     }
-  }, [score, lives, onEnd]);
+  }, [score, lives, onEnd, tracking]);
 
   const handleIconClick = (icon: string) => {
     if (!canTap()) {
@@ -74,7 +86,15 @@ export default function GamePage({ onEnd }: GamePageProps) {
       {showWarning && <InactivityWarning onContinue={resetTimer} />}
       {/* Controls Section */}
       <div className="landscape:my-auto">
-        <GameInstructions onQuit={() => onEnd(score)} />
+        <GameInstructions
+          onQuit={() => {
+            const duration = Math.floor(
+              (Date.now() - startTime.current) / 1000
+            );
+            tracking.trackGameCompleted({ score, duration });
+            onEnd(score);
+          }}
+        />
         <GameStats
           score={score}
           lives={lives}
