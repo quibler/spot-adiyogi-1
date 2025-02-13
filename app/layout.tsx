@@ -1,3 +1,5 @@
+// layout.tsx
+import MixpanelInit from "@/components/MixpanelInit";
 import "./globals.css";
 import { Inter } from "next/font/google";
 import type React from "react";
@@ -37,7 +39,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        {/* Initialize Mixpanel as soon as the client loads */}
+        <MixpanelInit />
+        {children}
+      </body>
     </html>
   );
 }

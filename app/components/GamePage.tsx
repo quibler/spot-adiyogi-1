@@ -1,10 +1,9 @@
-// GamePage.tsx
 "use client";
 
 import { useCallback, useEffect, useRef } from "react";
 import { useSound } from "@/lib/useSound";
 import type { GamePageProps } from "@/lib/types";
-import { ImagePreloader } from "@/components/ui/imagePreloader";
+import { ImagePreloader } from "@/components/imagePreloader";
 import { GAME_CONFIG, ASSETS } from "@/lib/constants";
 import { useGameState } from "@/lib/useGameState";
 import { useIconShuffle } from "@/lib/useIconShuffle";
@@ -14,6 +13,17 @@ import { GameInstructions } from "./game/GameInstructions";
 import { GameStats } from "./game/GameStats";
 import { InactivityWarning } from "./game/InactivityWarning";
 import { useTracking } from "@/lib/mixpanel";
+
+const getMedal = (score: number) => {
+  const MEDALS = [
+    { threshold: 100, name: "Diamond" },
+    { threshold: 80, name: "Platinum" },
+    { threshold: 60, name: "Gold" },
+    { threshold: 40, name: "Silver" },
+    { threshold: 20, name: "Bronze" },
+  ];
+  return MEDALS.find((medal) => score >= medal.threshold)?.name;
+};
 
 export default function GamePage({ onEnd }: GamePageProps) {
   const {
@@ -34,13 +44,31 @@ export default function GamePage({ onEnd }: GamePageProps) {
     useIconShuffle(shuffleInterval);
   const { playScore, playWrong } = useSound();
 
+  // Handle timeout completion
   const handleTimeout = useCallback(() => {
     const duration = Math.floor((Date.now() - startTime.current) / 1000);
-    tracking.trackGameCompleted({ score, duration });
+    tracking.trackGameCompleted({
+      score,
+      duration,
+      completed_type: "timeout",
+      medal: getMedal(score),
+    });
     onEnd(score);
   }, [onEnd, score, tracking]);
 
   const { showWarning, resetTimer } = useInactivityTimer(handleTimeout);
+
+  // Handle quit completion
+  const handleQuit = useCallback(() => {
+    const duration = Math.floor((Date.now() - startTime.current) / 1000);
+    tracking.trackGameCompleted({
+      score,
+      duration,
+      completed_type: "quit",
+      medal: getMedal(score),
+    });
+    onEnd(score);
+  }, [onEnd, score, tracking]);
 
   useEffect(() => {
     shuffleIcons();
@@ -55,10 +83,16 @@ export default function GamePage({ onEnd }: GamePageProps) {
     };
   }, [shuffleIcons, decreaseInterval, cleanup]);
 
+  // Handle game over completion (max score or no lives)
   useEffect(() => {
     if (score >= GAME_CONFIG.MAX_SCORE || lives <= 0) {
       const duration = Math.floor((Date.now() - startTime.current) / 1000);
-      tracking.trackGameCompleted({ score, duration });
+      tracking.trackGameCompleted({
+        score,
+        duration,
+        completed_type: "game_over",
+        medal: getMedal(score),
+      });
       onEnd(score);
     }
   }, [score, lives, onEnd, tracking]);
@@ -86,15 +120,7 @@ export default function GamePage({ onEnd }: GamePageProps) {
       {showWarning && <InactivityWarning onContinue={resetTimer} />}
       {/* Controls Section */}
       <div className="landscape:my-auto">
-        <GameInstructions
-          onQuit={() => {
-            const duration = Math.floor(
-              (Date.now() - startTime.current) / 1000
-            );
-            tracking.trackGameCompleted({ score, duration });
-            onEnd(score);
-          }}
-        />
+        <GameInstructions onQuit={handleQuit} />
         <GameStats
           score={score}
           lives={lives}

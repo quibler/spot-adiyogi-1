@@ -1,9 +1,8 @@
-// EndPage.tsx
 "use client";
 
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Share2, Sparkles, RotateCcw } from "lucide-react";
+import { Share2, Sparkles, RotateCcw, Instagram } from "lucide-react";
 import { useTracking } from "@/lib/mixpanel";
 
 interface EndPageProps {
@@ -57,17 +56,64 @@ export default function EndPage({ score, onRestart }: EndPageProps) {
   const tracking = useTracking();
   const medal = getMedal(score);
 
-  const shareWithFriends = () => {
-    tracking.trackShareOnInsta(score);
+  // "Challenge Friends" action - remains unchanged.
+  const shareWithFriends = async () => {
     if (navigator.share) {
-      navigator.share({
-        title: "Adiyogi Game",
-        text: `I scored ${score} points in the Adiyogi Game! Can you beat my score?`,
-        url: window.location.href,
-      });
+      try {
+        tracking.trackShareOnInsta(score, "native_share");
+        await navigator.share({
+          title: "Adiyogi Game",
+          text: `I scored ${score} points in the Adiyogi Game! Can you beat my score?`,
+          url: window.location.href,
+        });
+      } catch (error) {
+        console.error("Error sharing:", error);
+        // Fallback to Instagram share (see below)
+        handleInstagramShare();
+      }
     } else {
-      alert("Share this link with your friends!");
+      handleInstagramShare();
     }
+  };
+
+  // Fallback: Copy approved share text to clipboard and open Instagram
+  const handleInstagramShare = () => {
+    tracking.trackShareOnInsta(score, "instagram");
+    const shareText = `I scored ${score} points in the Adiyogi Game! Can you beat my score?`;
+    navigator.clipboard
+      .writeText(shareText)
+      .then(() => {
+        alert(
+          "Your score has been copied to the clipboard.\n\nPlease open Instagram, create a new post or story, and paste the text along with a screenshot of your score."
+        );
+        window.location.href = "instagram://app";
+      })
+      .catch((error) => {
+        console.error("Failed to copy text:", error);
+        alert(
+          "Unable to copy text. Please manually copy your score and share on Instagram."
+        );
+      });
+  };
+
+  // Instagram contest button uses Option B (same approved text as WhatsApp share)
+  const shareContestOnInstagram = () => {
+    tracking.trackShareOnInsta(score, "instagram");
+    const shareText = `I scored ${score} points in the Adiyogi Game! Can you beat my score?`;
+    navigator.clipboard
+      .writeText(shareText)
+      .then(() => {
+        alert(
+          "Your score has been copied to the clipboard.\n\nNow, please open Instagram to paste the text along with your screenshot for sharing."
+        );
+        window.location.href = "instagram://app";
+      })
+      .catch((error) => {
+        console.error("Failed to copy text:", error);
+        alert(
+          "Unable to copy text. Please manually share your score on Instagram."
+        );
+      });
   };
 
   const handlePlayAgain = () => {
@@ -83,7 +129,7 @@ export default function EndPage({ score, onRestart }: EndPageProps) {
   return (
     <div className="min-h-screen overflow-y-auto scrollbar-hide py-8">
       <div className="max-w-md mx-auto space-y-6 px-4">
-        {/* A. Score Box */}
+        {/* Score Box */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -128,7 +174,7 @@ export default function EndPage({ score, onRestart }: EndPageProps) {
           </div>
         </motion.div>
 
-        {/* B. Contest Box */}
+        {/* Contest Box */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -149,12 +195,19 @@ export default function EndPage({ score, onRestart }: EndPageProps) {
             </li>
             <li className="flex items-start">
               <span className="mr-2">🎁</span>
-              <span>Win 1 Month Free Access to Sadhguru Exclusive!</span>
+              <span>Win exclusive access to Sadhguru content!</span>
             </li>
           </ul>
+          <Button
+            onClick={shareContestOnInstagram}
+            className="w-full bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-base sm:text-lg py-4 sm:py-6"
+          >
+            <Instagram className="w-5 h-5 sm:w-6 sm:h-6 mr-2 animate-pulse" />
+            Share on Instagram
+          </Button>
         </motion.div>
 
-        {/* C. Bonus Box */}
+        {/* Bonus Box */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -167,11 +220,11 @@ export default function EndPage({ score, onRestart }: EndPageProps) {
           <ul className="space-y-3 mb-6 text-white/80">
             <li className="flex items-start">
               <span className="mr-2">🎥</span>
-              <span>Watch Sadhguru Exclusive&apos;s Shiva Series</span>
+              <span>Watch Shiva Series Sadhguru Exclusive</span>
             </li>
             <li className="flex items-start">
               <span className="mr-2">⏰</span>
-              <span>Free until &apos;28 February&apos;</span>
+              <span>Free until 28 February</span>
             </li>
             <li className="flex items-start">
               <span className="mr-2">📱</span>
@@ -179,8 +232,8 @@ export default function EndPage({ score, onRestart }: EndPageProps) {
             </li>
           </ul>
           <Button
-            className="w-full bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-base sm:text-lg py-4 sm:py-6"
             onClick={handleWatchNow}
+            className="w-full bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-base sm:text-lg py-4 sm:py-6"
           >
             Watch Now
           </Button>

@@ -1,4 +1,3 @@
-// lib/mixpanel.ts
 import mixpanel from "mixpanel-browser";
 
 // Define types for event properties
@@ -11,28 +10,26 @@ interface GameCompletedProperties extends BaseEventProperties {
   score: number;
   medal?: string;
   duration?: number;
+  completed_type: 'timeout' | 'quit' | 'game_over';
 }
 
 interface ShareProperties extends BaseEventProperties {
   score: number;
+  share_method: 'instagram' | 'native_share';  // Changed from 'platform' to 'share_method'
 }
 
 interface PlayAgainProperties extends BaseEventProperties {
   previous_score: number;
 }
 
-// For static export, hardcode the token
-const MIXPANEL_TOKEN = "your_token_here"; // Replace with your actual token
-
-// Track initialization state
+const MIXPANEL_TOKEN = "8f2198148dc13f47cf0c85c4698370f2";
 let isMixpanelInitialized = false;
 
-// Initialize mixpanel only on the client side
-const initMixpanel = () => {
+export const initMixpanel = () => {
   try {
     if (typeof window !== "undefined" && !isMixpanelInitialized) {
       mixpanel.init(MIXPANEL_TOKEN, {
-        debug: false, // Set to true during development if needed
+        debug: process.env.NODE_ENV === 'development',
         track_pageview: true,
         persistence: "localStorage",
         ignore_dnt: true,
@@ -46,7 +43,6 @@ const initMixpanel = () => {
   }
 };
 
-// Safe tracking wrapper with proper typing
 const track = <T extends BaseEventProperties>(
   eventName: string,
   properties?: Omit<T, keyof BaseEventProperties>
@@ -56,18 +52,21 @@ const track = <T extends BaseEventProperties>(
       if (!isMixpanelInitialized) {
         initMixpanel();
       }
-      mixpanel.track(eventName, {
+      const eventProperties = {
         ...properties,
         platform: "web",
         timestamp: new Date().toISOString(),
-      });
+      };
+      mixpanel.track(eventName, eventProperties);
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`[Mixpanel] Tracked ${eventName}:`, eventProperties);
+      }
     }
   } catch (e) {
-    console.error("Failed to track event:", eventName, e);
+    console.error(`Failed to track ${eventName}:`, e);
   }
 };
 
-// Track events with proper properties
 export const MixpanelTracking = {
   trackGameStarted: () => {
     track<BaseEventProperties>("adiyogi_game_started");
@@ -77,17 +76,20 @@ export const MixpanelTracking = {
     score,
     medal,
     duration,
+    completed_type,
   }: Omit<GameCompletedProperties, keyof BaseEventProperties>) => {
     track<GameCompletedProperties>("adiyogi_game_completed", {
       score,
       medal,
       duration,
+      completed_type,
     });
   },
 
-  trackShareOnInsta: (score: number) => {
+  trackShareOnInsta: (score: number, share_method: 'instagram' | 'native_share') => {
     track<ShareProperties>("adiyogi_shareoninsta_cta", {
       score,
+      share_method,
     });
   },
 
@@ -106,9 +108,7 @@ export const MixpanelTracking = {
   },
 };
 
-// React hook
 export const useTracking = () => {
-  // Initialize Mixpanel when the hook is first used
   if (typeof window !== "undefined" && !isMixpanelInitialized) {
     initMixpanel();
   }
