@@ -1,79 +1,93 @@
 // lib/mixpanel.ts
-import mixpanel from "mixpanel-browser";
+import mixpanel from 'mixpanel-browser';
 
-// Initialize Mixpanel with environment-specific settings
-mixpanel.init(process.env.NEXT_PUBLIC_MIXPANEL_TOKEN || "", {
-  debug: process.env.NODE_ENV === "development",
-  persistence: "localStorage",
-  ignore_dnt: true,
-});
+// For static export, hardcode the token
+const MIXPANEL_TOKEN = 'your_token_here';  // Replace with your actual token
 
-// Define event tracking interfaces for better type safety
-interface GameCompletedEvent {
-  score: number;
-  medal?: string;
-  duration?: number;
-}
+// Track initialization state
+let isMixpanelInitialized = false;
 
-// Track events with proper properties following Mixpanel best practices
+// Initialize mixpanel only on the client side
+const initMixpanel = () => {
+  try {
+    if (typeof window !== 'undefined' && !isMixpanelInitialized) {
+      mixpanel.init(MIXPANEL_TOKEN, {
+        debug: false, // Set to true during development if needed
+        track_pageview: true,
+        persistence: 'localStorage',
+        ignore_dnt: true,
+        batch_requests: true,
+        api_host: "https://api-js.mixpanel.com"
+      });
+      isMixpanelInitialized = true;
+    }
+  } catch (e) {
+    console.error('Failed to initialize Mixpanel:', e);
+  }
+};
+
+// Safe tracking wrapper
+const track = (eventName: string, properties: Record<string, any> = {}) => {
+  try {
+    if (typeof window !== 'undefined') {
+      if (!isMixpanelInitialized) {
+        initMixpanel();
+      }
+      mixpanel.track(eventName, {
+        ...properties,
+        platform: 'web',
+        timestamp: new Date().toISOString(),
+      });
+    }
+  } catch (e) {
+    console.error('Failed to track event:', eventName, e);
+  }
+};
+
+// Track events with proper properties
 export const MixpanelTracking = {
-  // Track game start with any initial properties
   trackGameStarted: () => {
-    mixpanel.track("adiyogi_game_started", {
-      platform: "web",
-      timestamp: new Date().toISOString(),
-    });
+    track('adiyogi_game_started');
   },
 
-  // Track game completion with score details
-  trackGameCompleted: ({ score, medal, duration }: GameCompletedEvent) => {
-    mixpanel.track("adiyogi_game_completed", {
+  trackGameCompleted: ({ score, medal, duration }: { 
+    score: number; 
+    medal?: string; 
+    duration?: number 
+  }) => {
+    track('adiyogi_game_completed', {
       score,
       medal,
       duration,
-      platform: "web",
-      timestamp: new Date().toISOString(),
     });
   },
 
-  // Track Instagram share attempt
   trackShareOnInsta: (score: number) => {
-    mixpanel.track("adiyogi_shareoninsta_cta", {
+    track('adiyogi_shareoninsta_cta', {
       score,
-      platform: "web",
-      timestamp: new Date().toISOString(),
     });
   },
 
-  // Track watch now CTA clicks
   trackWatchNow: () => {
-    mixpanel.track("adiyogi_watchnow_cta", {
-      platform: "web",
-      timestamp: new Date().toISOString(),
-    });
+    track('adiyogi_watchnow_cta');
   },
 
-  // Track donate button clicks
   trackDonate: () => {
-    mixpanel.track("adiyogi_donate", {
-      platform: "web",
-      timestamp: new Date().toISOString(),
-    });
+    track('adiyogi_donate');
   },
 
-  // Track play again clicks
   trackPlayAgain: (previousScore: number) => {
-    mixpanel.track("adiyogi_playagain", {
+    track('adiyogi_playagain', {
       previous_score: previousScore,
-      platform: "web",
-      timestamp: new Date().toISOString(),
     });
-  },
+  }
 };
 
-// Type-safe hook for using Mixpanel tracking
+// React hook
 export const useTracking = () => {
+  // Initialize Mixpanel when the hook is first used
+  if (typeof window !== 'undefined' && !isMixpanelInitialized) {
+    initMixpanel();
+  }
   return MixpanelTracking;
 };
-
-export default mixpanel;
