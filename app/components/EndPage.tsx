@@ -77,7 +77,7 @@ export default function EndPage({ score, onRestart }: EndPageProps) {
 
   const handleWatchNow = () => {
     tracking.trackWatchNow();
-    window.open("YOUR_WATCH_NOW_LINK", "_blank");
+    window.open("https://sgapp.sng.link/Acxyc/dua4/5rgj", "_blank");
   };
 
   return (
