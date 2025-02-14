@@ -195,7 +195,9 @@ export default function EndPage({ score, onRestart }: EndPageProps) {
             </li>
             <li className="flex items-start">
               <span className="mr-2">🎁</span>
-              <span>Win exclusive access to Sadhguru content!</span>
+              <span>
+                Stand a chance to win 1 MONTH of Sadhguru Exclusive for Free! 🏆
+              </span>
             </li>
           </ul>
           <Button
@@ -220,11 +222,11 @@ export default function EndPage({ score, onRestart }: EndPageProps) {
           <ul className="space-y-3 mb-6 text-white/80">
             <li className="flex items-start">
               <span className="mr-2">🎥</span>
-              <span>Watch Shiva Series Sadhguru Exclusive</span>
+              <span>Watch Sadhguru Exclusive Shiva Series FREE</span>
             </li>
             <li className="flex items-start">
               <span className="mr-2">⏰</span>
-              <span>Free until 28 February</span>
+              <span>Until 28 February</span>
             </li>
             <li className="flex items-start">
               <span className="mr-2">📱</span>
