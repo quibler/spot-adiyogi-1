@@ -217,7 +217,8 @@ export default function EndPage({ score, onRestart }: EndPageProps) {
         >
           <h3 className="text-xl font-bold mb-4 flex items-center">
             <Sparkles className="w-6 h-6 mr-2 text-yellow-400" />
-            Bonus Content
+            Bonus
+            <Sparkles className="w-6 h-6 mr-2 text-yellow-400" />
           </h3>
           <ul className="space-y-3 mb-6 text-white/80">
             <li className="flex items-start">
