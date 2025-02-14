@@ -191,7 +191,9 @@ export default function EndPage({ score, onRestart }: EndPageProps) {
             </li>
             <li className="flex items-start">
               <span className="mr-2">#️⃣</span>
-              <span>Post with #MyAdiyogiGameScore</span>
+              <span>
+                Post with <strong>#MyAdiyogiGameScore</strong>
+              </span>
             </li>
             <li className="flex items-start">
               <span className="mr-2">🎁</span>
@@ -202,7 +204,7 @@ export default function EndPage({ score, onRestart }: EndPageProps) {
           </ul>
           <Button
             onClick={shareContestOnInstagram}
-            className="w-full bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-base sm:text-lg py-4 sm:py-6"
+            className="w-full bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 hover:from-yellow-500 hover:via-pink-600 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-base sm:text-lg py-4 sm:py-6"
           >
             <Instagram className="w-5 h-5 sm:w-6 sm:h-6 mr-2 animate-pulse" />
             Share on Instagram
@@ -217,13 +219,14 @@ export default function EndPage({ score, onRestart }: EndPageProps) {
         >
           <h3 className="text-xl font-bold mb-4 flex items-center">
             <Sparkles className="w-6 h-6 mr-2 text-yellow-400" />
-            Bonus
-            <Sparkles className="w-6 h-6 mr-2 text-yellow-400" />
+            Bonus <Sparkles className="w-6 h-6 ml-2 text-yellow-400" />
           </h3>
           <ul className="space-y-3 mb-6 text-white/80">
             <li className="flex items-start">
               <span className="mr-2">🎥</span>
-              <span>Watch Sadhguru Exclusive Shiva Series FREE</span>
+              <span>
+                <strong>Watch Shiva Series for FREE</strong>
+              </span>
             </li>
             <li className="flex items-start">
               <span className="mr-2">⏰</span>
