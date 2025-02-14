@@ -127,7 +127,7 @@ export default function EndPage({ score, onRestart }: EndPageProps) {
   };
 
   return (
-    <div className="min-h-screen overflow-y-auto scrollbar-hide py-8">
+    <div className="scrollbar-hide py-8">
       <div className="max-w-md mx-auto space-y-6 px-4">
         {/* Score Box */}
         <motion.div
