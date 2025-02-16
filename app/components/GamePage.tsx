@@ -16,11 +16,12 @@ import { useTracking } from "@/lib/mixpanel";
 
 const getMedal = (score: number) => {
   const MEDALS = [
-    { threshold: 500, name: "Mythic" },
-    { threshold: 250, name: "Diamond" },
-    { threshold: 150, name: "Platinum" },
-    { threshold: 100, name: "Gold" },
-    { threshold: 60, name: "Silver" },
+    { threshold: 250, name: "Mythic" },
+    { threshold: 150, name: "Legendary" },
+    { threshold: 100, name: "Platinum" },
+    { threshold: 80, name: "Diamond" },
+    { threshold: 60, name: "Gold" },
+    { threshold: 40, name: "Silver" },
     { threshold: 20, name: "Bronze" },
   ];
   return MEDALS.find((medal) => score >= medal.threshold)?.name || "None";
