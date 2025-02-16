@@ -12,28 +12,35 @@ interface EndPageProps {
 
 const MEDALS = [
   {
-    threshold: 100,
+    threshold: 500,
+    name: "Mythic",
+    emoji: "👑",
+    color: "text-purple-500",
+    message: "Inconceivable! You've reached the pinnacle of skill!",
+  },
+  {
+    threshold: 250,
     name: "Diamond",
     emoji: "💎",
     color: "text-cyan-300",
-    message: "Legendary! You've achieved the highest rank!",
+    message: "Dazzling performance! You're a true gem!",
   },
   {
-    threshold: 80,
+    threshold: 150,
     name: "Platinum",
-    emoji: "⚪",
+    emoji: "🏆",
     color: "text-slate-300",
-    message: "Outstanding! You're among the elite players!",
+    message: "Outstanding! You're among the top players!",
   },
   {
-    threshold: 60,
+    threshold: 100,
     name: "Gold",
     emoji: "🥇",
     color: "text-yellow-400",
     message: "Excellent! You've mastered the game!",
   },
   {
-    threshold: 40,
+    threshold: 60,
     name: "Silver",
     emoji: "🥈",
     color: "text-gray-300",

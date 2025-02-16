@@ -16,13 +16,14 @@ import { useTracking } from "@/lib/mixpanel";
 
 const getMedal = (score: number) => {
   const MEDALS = [
-    { threshold: 100, name: "Diamond" },
-    { threshold: 80, name: "Platinum" },
-    { threshold: 60, name: "Gold" },
-    { threshold: 40, name: "Silver" },
+    { threshold: 500, name: "Mythic" },
+    { threshold: 250, name: "Diamond" },
+    { threshold: 150, name: "Platinum" },
+    { threshold: 100, name: "Gold" },
+    { threshold: 60, name: "Silver" },
     { threshold: 20, name: "Bronze" },
   ];
-  return MEDALS.find((medal) => score >= medal.threshold)?.name;
+  return MEDALS.find((medal) => score >= medal.threshold)?.name || "None";
 };
 
 export default function GamePage({ onEnd }: GamePageProps) {
@@ -95,7 +96,7 @@ export default function GamePage({ onEnd }: GamePageProps) {
       });
       onEnd(score);
     }
-  }, [score, lives, onEnd, tracking]);
+  }, [score, lives, tracking, onEnd]);
 
   const handleIconClick = (icon: string) => {
     if (!canTap()) {

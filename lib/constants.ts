@@ -5,7 +5,7 @@ export const GAME_CONFIG = {
   INTERVAL_DECREASE: 0.05, // 5% decrease
   INTERVAL_DECREASE_TIME: 10000, // 10 seconds
   MAX_LIVES: 5,
-  MAX_SCORE: 108,
+  MAX_SCORE: 1008,
   TARGET_POINTS: 50, // Points needed to win
   FLASH_DURATION: 200, // Duration of grid flash animation
   SPEED_FLASH_DURATION: 500, // Duration of speed flash animation
